@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 unsigned char CHIP8_FONTSET[80] = 
 {
@@ -25,17 +26,41 @@ unsigned char CHIP8_FONTSET[80] =
 
 void Chip8()
 {
-    
+    // default
 }
 
 void ~Chip8() 
 {
-    
+    // default
 }
 
+/**
+* Resets the registers, memory, and display state to hardware defaults.
+*/
 void initialize()
 {
-    //TODO
+    m_addressI = 0;
+    m_programCounter = 0x200;
+    m_opCode = 0;
+    m_stackPointer = 0;
+
+    for (int i = 0; i < 64 * 32; ++i)
+        gfx[i] = 0;
+
+    for (int i = 0; i < 16; ++i)
+        m_stack[i] = 0;
+
+    for (int i = 0; i < 16; ++i)
+        m_registers[i] = 0;
+
+    for (int i = 0; i < 4096; ++i)
+        m_gameMemory[i] = 0;
+
+    for (int i = 0; i < 80; ++i)
+        m_gameMemory[i] = CHIP8_FONTSET[i];
+
+    m_delayTimer = 0;
+    m_soundTimer = 0;
 }
 
 void emulateCycle()
@@ -43,7 +68,38 @@ void emulateCycle()
     // TODO
 }
 
-void loadROM(const char *filename)
+/**
+* Loads a ROM file into memory.
+*
+* @param filepath Path to the .ch8 ROM file
+* @return true if the ROM was successfully loaded; false otherwise.
+*/
+bool loadROM(const char *filename)
 {
-    // TODO
+    FILE* file = fopen(filename, "rb");
+    if (!file) {
+        std::cerr << "Failed to open ROM file.\n";
+        return false;
+    }
+
+    fseek(file, 0, SEEK_END);
+    long fileSize = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    if (fileSize > (4096 - 512)) {
+        std::cerr << "ROM file size exceeds memory capacity.\n";
+        fclose(file);
+        return false;
+    }
+
+    size_t bytesRead = fread(&m_gameMemory[0x200], 1, fileSize, file);
+
+    fclose(file);
+
+    if (bytesRead != fileSize) {
+        std::cerr << "READING ERROR\n";
+        return false;
+    }
+
+    return true;
 }
