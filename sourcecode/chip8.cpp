@@ -65,9 +65,40 @@ void Chip8::initialize()
     m_soundTimer = 0;
 }
 
-void drawAt(unsigned char x, unsigned char y, unsigned char height)
+/**
+* Draws a sprite at coordinate (x, y) that has a width of 8 pixels and height of "height" pixels
+* @param x The x position of the coordinate
+* @param y The y position of the coordinate
+* @param height The height of the sprite being drawn
+*/
+void Chip8::drawAt(unsigned char x, unsigned char y, unsigned char height)
 {
-    // TODO
+    unsigned char pixel;
+    m_registers[0xF] = 0;
+
+    for (int ypos = 0; ypos < height; ypos++)
+    {
+        if ((y + ypos) >= 32) 
+            continue;
+
+        pixel = m_gameMemory[m_addressI + ypos];
+
+        for (int xpos = 0; xpos < 8; xpos++)
+        {
+            if ((x + xpos) >= 64) 
+                continue;
+
+            if (pixel & (0x80 >> xpos) != 0)
+            {
+                if (gfx[(y + ypos) * 64 + (x + xpos)] == 1)
+                {
+                    m_registers[0xF] = 1;
+                }
+                gfx[(y + ypos) * 64 + (x + xpos)] ^= 1;
+            }
+        }
+    }
+    drawFlag = true;
 }
 
 /**

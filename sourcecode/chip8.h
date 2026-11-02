@@ -28,4 +28,5 @@ class Chip8 {
         unsigned char m_soundTimer;
 
         void initialize();
+        void drawAt(unsigned char x, unsigned char y, unsigned char height);
 };
