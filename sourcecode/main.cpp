@@ -96,6 +96,8 @@ int main(int argc, char **argv)
         for (int i = 0; i < 10; ++i)
             myChip8.emulateCycle();
 
+        myChip8.decrementTimers();
+
         if (myChip8.drawFlag) 
         {
             for (int i = 0; i < 64 * 32; ++i) 
