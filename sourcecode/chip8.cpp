@@ -78,23 +78,27 @@ void Chip8::drawAt(unsigned char x, unsigned char y, unsigned char height)
 
     for (int ypos = 0; ypos < height; ypos++)
     {
-        if ((y + ypos) >= 32) 
-            continue;
+        int currentY = (y + ypos);
+
+        if (currentY >= 32)
+            break;
 
         pixel = m_gameMemory[m_addressI + ypos];
 
         for (int xpos = 0; xpos < 8; xpos++)
         {
-            if ((x + xpos) >= 64) 
-                continue;
+            int currentX = (x + xpos);
 
-            if (pixel & (0x80 >> xpos) != 0)
+            if (currentX >= 64)
+                break;
+
+            if ((pixel & (0x80 >> xpos)) != 0)
             {
-                if (gfx[(y + ypos) * 64 + (x + xpos)] == 1)
+                if (gfx[(currentY * 64) + currentX] == 1)
                 {
                     m_registers[0xF] = 1;
                 }
-                gfx[(y + ypos) * 64 + (x + xpos)] ^= 1;
+                gfx[(currentY * 64) + currentX] ^= 1;
             }
         }
     }
@@ -118,8 +122,9 @@ void Chip8::emulateCycle()
             {
                 case 0x0000: 
                 {
-                    for (int i = 0; i < 64 * 32; i++)
+                    for (int i = 0; i < 64 * 32; ++i)
                         gfx[i] = 0;
+
                     drawFlag = true;
                     break;
                 }
@@ -310,7 +315,7 @@ void Chip8::emulateCycle()
 
             if (m_registers[vx] != m_registers[vy])
                 m_programCounter += 2;
-            
+
             break;
         }
 
@@ -483,8 +488,17 @@ void Chip8::emulateCycle()
             printf("Unknown opcode: 0x%X\n", m_opCode);
         }
     }
+}
 
-    // TODO: Update Timers
+/**
+* Decrements the delay and sound timers.
+*/
+void Chip8::decrementTimers()
+{
+    if (m_delayTimer > 0)
+        m_delayTimer--;
+    if (m_soundTimer > 0)
+        m_soundTimer--;
 }
 
 /**

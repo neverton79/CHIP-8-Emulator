@@ -6,8 +6,10 @@ class Chip8 {
 
         bool drawFlag;
 
-        void loadROM(const char* filename);
+        bool loadROM(const char* filename);
         void emulateCycle();
+        void initialize();
+        void decrementTimers();
 
 
         unsigned char gfx[64 * 32];
@@ -27,6 +29,5 @@ class Chip8 {
         unsigned char m_delayTimer;
         unsigned char m_soundTimer;
 
-        void initialize();
         void drawAt(unsigned char x, unsigned char y, unsigned char height);
 };
