@@ -61,6 +61,8 @@ int main(int argc, char **argv)
 
     while (running) 
     {
+        uint32_t startTicks = SDL_GetTicks();
+
         while (SDL_PollEvent(&event)) 
         {
             if (event.type == SDL_EVENT_QUIT) 
@@ -113,7 +115,9 @@ int main(int argc, char **argv)
             myChip8.drawFlag = false;
         }
 
-        SDL_Delay(16); // ~60Hz
+        uint32_t frameTicks = SDL_GetTicks() - startTicks;
+        if (frameTicks < 16)
+            SDL_Delay(16 - frameTicks);
     }
 
     SDL_DestroyTexture(texture);
