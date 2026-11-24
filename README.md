@@ -43,3 +43,4 @@ The 16-key CHIP-8 keypad is mapped to a modern keyboard as follows:
 For example, in *Space Invaders*: Q moves left, E moves right, and W shoots.
 
 ## Demo Gameplay
+https://github.com/user-attachments/assets/46b231f4-d455-4130-9bd6-2b0c6291a016
