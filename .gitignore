@@ -71,5 +71,6 @@ vcpkg_installed/
 Testing/
 .cache/
 
-# roms
+# roms & videos
 roms/
+videos/
